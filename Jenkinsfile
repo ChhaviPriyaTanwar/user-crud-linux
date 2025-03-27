@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:10.11.0-alpine'
-            // Optional: Add args if needed, e.g., args '-v /tmp:/tmp'
-        }
-    }
+    agent any
     stages {
         stage('Checkout') {
             steps {
@@ -13,6 +8,11 @@ pipeline {
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'node:10.11.0-alpine'
+                }
+            }
             steps {
                 sh 'npm install'
                 sh 'npm test'
