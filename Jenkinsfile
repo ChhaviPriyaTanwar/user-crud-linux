@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent any  
     stages {
         stage('Checkout') {
             steps {
@@ -7,14 +7,14 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:10.11.0-alpine'
-                }
-            }
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
                 sh 'npm test'
             }
         }
