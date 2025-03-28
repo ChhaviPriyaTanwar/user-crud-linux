@@ -6,12 +6,6 @@ pipeline {
                 checkout scm            
 	   }
        }
-       stage("Install Node.js and npm") {
-            steps {
-                sh "apt-get update"
-                sh "apt-get install -y nodejs npm"  // Install both Node.js and npm
-            }
-        }
         stage("Tests") {
             steps {
 		sh "npm install"
