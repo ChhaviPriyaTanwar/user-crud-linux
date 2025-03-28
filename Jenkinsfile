@@ -3,9 +3,8 @@ pipeline {
   stages {
     stage('Test npm') {
       steps {
-        sh """
-          npm --version
-        """
+        sh 'echo "PATH: $PATH"'
+        sh 'npm --version'
       }
     }
   }
