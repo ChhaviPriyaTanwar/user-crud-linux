@@ -4,20 +4,15 @@ pipeline {
         stage("checkout") {
             steps {
                 checkout scm            
-	        }
-        }        
-        stage("Install Dependencies") {
-            steps {
-                sh "apt-get update"
-                sh "apt-get install -y npm"
-            }
-        }
+	   }
+       }        
         stage("Tests") {
             steps {
-                sh "npm install"  // Install project dependencies
-                sh "npm test"
+		sh "apt install npm"
+		sh "npm test"
             }
         }
+
         stage("Build") {
             steps {
                 sh 'npm run build'
