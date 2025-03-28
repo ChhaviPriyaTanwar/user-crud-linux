@@ -1,28 +1,15 @@
 pipeline {
-    agent any  
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ChhaviPriyaTanwar/user-crud-linux.git'
-            }
-        }
+  agent { label 'master' }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+  tools { nodejs "nodejs" }
 
-        stage('Run Tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
+  stages {
+    stage('Test npm') {
+      steps {
+        sh """
+          npm --version
+        """
+      }
     }
+  }
 }
