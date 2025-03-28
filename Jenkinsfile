@@ -1,7 +1,6 @@
 pipeline {
-  agent { label 'master' }
+  agent { label 'main' }
 
-  tools { nodejs "nodejs" }
 
   stages {
     stage('Test npm') {
