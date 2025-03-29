@@ -4,12 +4,12 @@ pipeline {
         stage("checkout") {
             steps {
                 checkout scm            
-	   }
+	          }
        }
         stage("Tests") {
             steps {
-		sh "npm install"
-		sh "npm test"
+                sh "npm install"
+                sh "npm test"
             }
         }
 
@@ -18,10 +18,10 @@ pipeline {
                 sh 'npm run build'
             }
         }
-	stage("Build Image"){
-	     steps{
-		     sh 'docker build -t my-node-app:1.0 .'
-	     }
-	}
+        stage("Build Image"){
+            steps{
+                sh 'docker build -t my-node-app:1.0 .'
+            }
+        }
     }
 }
