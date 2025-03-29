@@ -8,9 +8,6 @@ RUN npm install
 
 COPY . .
 
-# For Production
-COPY .env /usr/src/app/.env
-
 RUN npm run build
 
 EXPOSE 3000

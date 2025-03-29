@@ -37,4 +37,3 @@ export class AppModule {
     console.log('DB_NAME:', process.env.DB_NAME);
   }
 }
-console.log("DB_DIALECT : ",process.env.DB_DIALECT);
