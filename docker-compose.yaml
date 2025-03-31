@@ -1,48 +1,82 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_db
+  db:
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: user
-      MYSQL_USER: test
-      MYSQL_PASSWORD: Password@123
+      MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
-      - app_network
+      - app-network
 
-  nestjs-app:
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: nestjs_api
     environment:
-      DB_HOST: mysql_db
+      DB_HOST: db      
       DB_PORT: 3306
-      DB_USER: test
-      DB_PASSWORD: Password@123
-      DB_NAME: user
-      DB_DIALECT: mysql
+      DB_USER: root
+      DB_PASS: root
+      DB_NAME: mydb
     ports:
       - "3000:3000"
     depends_on:
-      - mysql
+      - db
     networks:
-      - app_network
-    volumes:
-      - .env:/usr/src/app/.env   # Mount .env file as a volume
+      - app-network
 
 networks:
-  app_network:
-    driver: bridge
+  app-network:
 
-volumes:
-  mysql_data:
+
+# old version -
+# version: '3.8'
+
+# services:
+#   mysql:
+#     image: mysql:8.0
+#     container_name: mysql_db
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: user
+#       MYSQL_USER: test
+#       MYSQL_PASSWORD: Password@123
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     networks:
+#       - app_network
+
+#   nestjs-app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: nestjs_api
+#     environment:
+#       DB_HOST: mysql_db
+#       DB_PORT: 3306
+#       DB_USER: test
+#       DB_PASSWORD: Password@123
+#       DB_NAME: user
+#       DB_DIALECT: mysql
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       - mysql
+#     networks:
+#       - app_network
+#     volumes:
+#       - .env:/usr/src/app/.env   # Mount .env file as a volume
+
+# networks:
+#   app_network:
+#     driver: bridge
+
+# volumes:
+#   mysql_data:
 
 
 # version: '3.8'

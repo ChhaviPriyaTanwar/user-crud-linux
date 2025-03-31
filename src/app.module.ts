@@ -20,7 +20,7 @@ import { UsersModule } from './users/users.module';
       // database: process.env.DB_NAME,
       dialect: 'mysql',
       host: process.env.DB_HOST || 'my-mysql-container',
-      port: +process.env.DB_PORT || 3306,
+      port: Number(process.env.DB_PORT) || 3306,
       username: process.env.DB_USER || 'root',
       password: process.env.DB_PASS || 'root',
       database: process.env.DB_NAME || 'mydb',
