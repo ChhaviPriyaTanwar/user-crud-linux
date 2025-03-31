@@ -20,7 +20,7 @@ import { UsersModule } from './users/users.module';
       database: process.env.DB_NAME,      
       autoLoadModels: true,
       // synchronize: true,
-      synchronize: fasle,
+      synchronize: false,
     }),    
     UsersModule,
   ],
