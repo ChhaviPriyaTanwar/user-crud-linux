@@ -6,6 +6,12 @@ pipeline {
                 checkout scm            
 	          }
        }
+	    stage("Prepare Environment") {
+            steps {
+                // Copy .env from your local Windows path to the Jenkins workspace
+                sh "cp /mnt/d/Node\\ JS/NestJs/user-crud-linux/.env ./"
+            }
+        }
         stage("Tests") {
             steps {
                 sh "npm install"
