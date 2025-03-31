@@ -8,8 +8,8 @@ pipeline {
        }
 	    stage("Prepare Environment") {
             steps {
-                // Copy .env from your local Windows path to the Jenkins workspace
-                sh "cp /mnt/d/Node\\ JS/NestJs/user-crud-linux/.env ./"
+                // PowerShell command to copy .env file
+                powershell "Copy-Item -Path 'D:\\Node JS\\NestJs\\user-crud-linux\\.env' -Destination '.'"
             }
         }
         stage("Tests") {
