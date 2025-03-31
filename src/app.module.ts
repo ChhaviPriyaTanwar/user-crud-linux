@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Dialect, NUMBER } from 'sequelize';
 import { UsersModule } from './users/users.module';
@@ -11,21 +11,35 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    SequelizeModule.forRoot({
+    // SequelizeModule.forRoot({
       // dialect: process.env.DB_DIALECT as Dialect,
       // port: Number(process.env.DB_PORT),
       // host: process.env.DB_HOST,
       // username: process.env.DB_USER,
       // password: process.env.DB_PASSWORD,
       // database: process.env.DB_NAME,
-      dialect: 'mysql',
-      host: process.env.DB_HOST || 'my-mysql-container',
-      port: Number(process.env.DB_PORT) || 3306,
-      username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || 'root',
-      database: process.env.DB_NAME || 'mydb',
-      autoLoadModels: true,
-      synchronize: true,      
+    //   dialect: 'mysql',
+    //   host: process.env.DB_HOST || 'mysql',
+    //   port: Number(process.env.DB_PORT) || 3306,
+    //   username: process.env.DB_USER || 'test',
+    //   password: process.env.DB_PASSWORD || 'Password@123',
+    //   database: process.env.DB_NAME || 'user',
+    //   autoLoadModels: true,
+    //   synchronize: true,
+    // }),
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        dialect: 'mysql',
+        host: configService.get('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        autoLoadModels: true,
+        synchronize: false,
+      }),
+      inject: [ConfigService],
     }),
     UsersModule,
   ],
