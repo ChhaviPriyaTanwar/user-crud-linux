@@ -6,13 +6,7 @@ pipeline {
                 checkout scm            
 	          }
        }
-	    stage("Prepare Environment") {
-            steps {
-                // PowerShell command to copy .env file
-                powershell "Copy-Item -Path 'D:\\Node JS\\NestJs\\user-crud-linux\\.env' -Destination '.'"
-            }
-        }
-        stage("Tests") {
+	 stage("Tests") {
             steps {
                 sh "npm install"
                 sh "npm test"
