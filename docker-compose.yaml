@@ -138,8 +138,8 @@ services:
       - mysql
     networks:
       - app_network
-    # env_file:
-      # - .env
+    env_file:
+      - .env
 
 networks:
   app_network:
