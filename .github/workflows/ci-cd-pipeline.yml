@@ -45,7 +45,7 @@ jobs:
             -e DB_PASSWORD=Password@123 \
             -e DB_NAME=user \
             -e DB_DIALECT=mysql \
-            ${{ secrets.DOCKER_USERNAME }}/nestjs-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-api:latest
           sleep 10 # Wait for the app to start
           curl http://localhost:3000 || exit 1
           docker stop nestjs_test
