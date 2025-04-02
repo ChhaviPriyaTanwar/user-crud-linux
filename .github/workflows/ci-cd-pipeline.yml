@@ -63,11 +63,11 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t myapp:latest .
-          docker tag myapp:latest mydockerhubuser/myapp:latest
+          docker tag myapp:latest tanwarchhavi/myapp:latest
 
       - name: Push Docker image
-        run: docker push mydockerhubuser/myapp:latest
+        run: docker push tanwarchhavi/myapp:latest
 
       - name: Deploy to server
         run: |
-          ssh user@server "docker pull mydockerhubuser/myapp:latest && docker-compose up -d"
+          ssh user@server "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
