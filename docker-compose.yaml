@@ -102,89 +102,51 @@
 
 # really old version -
 
-# version: '3.8'
-
-# services:
-#   mysql:
-#     image: mysql:8.0
-#     container_name: mysql_db
-#     environment:
-#       MYSQL_ROOT_PASSWORD: root
-#       MYSQL_DATABASE: user
-#       MYSQL_USER: test
-#       MYSQL_PASSWORD: Password@123
-#     ports:
-#       - "3306:3306"
-#     volumes:
-#       - mysql_data:/var/lib/mysql
-#     networks:
-#       - app_network
-
-#   nestjs-app:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     container_name: nestjs_api
-#     environment:
-#       DB_HOST: mysql
-#       DB_PORT: 3306
-#       DB_USER: test
-#       DB_PASSWORD: Password@123
-#       DB_NAME: user
-#       DB_DIALECT: mysql
-#     ports:
-#       - "3000:3000"
-#     depends_on:
-#       - mysql
-#     networks:
-#       - app_network
-#     env_file:
-#       - .env
-
-# networks:
-#   app_network:
-#     driver: bridge
-
-# volumes:
-#   mysql_data:
-
-
-# New 1/4/2024 for mysql issue
 version: '3.8'
 
 services:
   mysql:
-    image: mysql:5.7
-    container_name: my-mysql
-    restart: always
+    image: mysql:8.0
+    container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: user
+      MYSQL_USER: test
+      MYSQL_PASSWORD: Password@123
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
-      - app-network
+      - app_network
 
-  node-app:
-    image: jenkins/my-node-app 
-    container_name: node-app
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs_api
     environment:
       DB_HOST: mysql
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: mydb
+      DB_PORT: 3306
+      DB_USER: test
+      DB_PASSWORD: Password@123
+      DB_NAME: user
+      DB_DIALECT: mysql
     ports:
       - "3000:3000"
-    networks:
-      - app-network
     depends_on:
       - mysql
+    networks:
+      - app_network
+    env_file:
+      - .env
 
 networks:
-  app-network:
+  app_network:
     driver: bridge
+
+volumes:
+  mysql_data:
 
 
 
