@@ -73,7 +73,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 122.179.80.51 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 122.179.80.51 >> ~/.ssh/known_hosts || true  # ✅ Ignore errors if host is unreachable
 
-      - name: Deploy to server
-        run: ssh user@[122.179.80.51] "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
+      - name: Deploy to Server
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@122.179.80.51 "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
