@@ -70,4 +70,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh user@server "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
+          ssh user@122.179.80.51 "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
