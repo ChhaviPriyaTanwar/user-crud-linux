@@ -1,73 +1,127 @@
-name: CI/CD Pipeline
+name: NestJS CI/CD with Docker
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-and-test:
+  build-and-push:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: user
-          MYSQL_USER: test
-          MYSQL_PASSWORD: Password@123
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      # Step 2: Set up Docker Buildx for multi-platform builds
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: 20
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install
+      # Step 4: Build and push the NestJS app Docker image
+      - name: Build and push NestJS Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/nestjs-api:latest
+          platforms: linux/amd64,linux/arm64
 
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Build application
-        run: npm run build
-
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Build Docker image
+      # Step 5: (Optional) Test the image locally
+      - name: Test the Docker image
         run: |
-          docker build -t myapp:latest .
-          docker tag myapp:latest tanwarchhavi/myapp:latest
+          docker run -d --name nestjs_test -p 3000:3000 \
+            -e DB_HOST=host.docker.internal \
+            -e DB_PORT=3306 \
+            -e DB_USER=test \
+            -e DB_PASSWORD=Password@123 \
+            -e DB_NAME=user \
+            -e DB_DIALECT=mysql \
+            ${{ secrets.DOCKER_USERNAME }}/nestjs-api:latest
+          sleep 10 # Wait for the app to start
+          curl http://localhost:3000 || exit 1
+          docker stop nestjs_test
 
-      - name: Push Docker image
-        run: docker push tanwarchhavi/myapp:latest
 
-      - name: Deploy to server
-        run: |
-          ssh user@122.179.80.51 "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
+
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   build-and-test:
+#     runs-on: ubuntu-latest
+
+#     services:
+#       mysql:
+#         image: mysql:8.0
+#         env:
+#           MYSQL_ROOT_PASSWORD: root
+#           MYSQL_DATABASE: user
+#           MYSQL_USER: test
+#           MYSQL_PASSWORD: Password@123
+#         ports:
+#           - 3306:3306
+#         options: >-
+#           --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+#           --health-interval=10s
+#           --health-timeout=5s
+#           --health-retries=5
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 20
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Run lint
+#         run: npm run lint
+
+#       - name: Run tests
+#         run: npm run test
+
+#       - name: Build application
+#         run: npm run build
+
+#   deploy:
+#     needs: build-and-test
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Log in to DockerHub
+#         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+#       - name: Build Docker image
+#         run: |
+#           docker build -t myapp:latest .
+#           docker tag myapp:latest tanwarchhavi/myapp:latest
+
+#       - name: Push Docker image
+#         run: docker push tanwarchhavi/myapp:latest
+
+#       - name: Deploy to server
+#         run: |
+#           ssh user@122.179.80.51 "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
