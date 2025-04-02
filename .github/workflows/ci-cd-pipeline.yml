@@ -73,7 +73,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H your-server-ip >> ~/.ssh/known_hosts
+          ssh-keyscan -H 2401:4900:889b:db20:b59d:e380:792e:5edf >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: ssh user@[2401:4900:889b:db20:b59d:e380:792e:5edf] "docker pull tanwarchhavi/myapp:latest && docker-compose up -d"
