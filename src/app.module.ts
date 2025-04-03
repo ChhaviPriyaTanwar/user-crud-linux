@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Dialect, NUMBER } from 'sequelize';
+import { Dialect,  } from 'sequelize';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,8 +19,7 @@ import { UsersModule } from './users/users.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,      
       autoLoadModels: true,
-      // synchronize: true,
-      synchronize: false,
+      synchronize: true,
     }),    
     UsersModule,
   ],
